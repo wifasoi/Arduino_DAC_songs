@@ -1,4 +1,5 @@
-
+#include <TimerDue.h>
+#include <avr/pgmspace.h>
 //PROGMEM  prog_uchar sine256[] ={
 //  102,101,101,101,101,101,101,101,
 //  101,100,100,100,99,99,98,98,98,
@@ -28,36 +29,48 @@
 
 //PROGMEM  prog_uchar sine256[] ={25,26,26,27,28,28,29,29,30,31,31,32,32,33,34,34,35,35,36,37,37,38,38,39,39,40,40,41,41,42,42,43,43,44,44,44,45,45,46,46,46,47,47,47,48,48,48,48,49,49,49,49,49,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,49,49,49,49,48,48,48,48,47,47,47,46,46,46,45,45,45,44,44,43,43,42,42,41,41,40,40,39,39,38,38,37,37,36,36,35,35,34,33,33,32,32,31,30,30,29,28,28,27,27,26,25,25,24,23,23,22,22,21,20,20,19,18,18,17,17,16,15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,7,7,6,6,5,5,5,4,4,4,3,3,3,2,2,2,2,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,3,3,3,4,4,4,5,5,6,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,15,15,16,16,17,18,18,19,19,20,21,21,22,22,23,24,24};
 
-PROGMEM  prog_uchar sine250[] = {25,26,26,27,28,28,29,29,30,31,31,32,33,33,34,34,35,36,36,37,37,38,38,39,39,40,41,41,41,42,42,43,43,44,44,45,45,45,46,46,47,47,47,47,48,48,48,49,49,49,49,49,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,49,49,49,49,49,48,48,48,47,47,47,47,46,46,45,45,45,44,44,43,43,42,42,41,41,41,40,39,39,38,38,37,37,36,36,35,34,34,33,33,32,31,31,30,29,29,28,28,27,26,26,25,24,24,23,22,22,21,21,20,19,19,18,17,17,16,16,15,14,14,13,13,12,12,11,11,10,9,9,9,8,8,7,7,6,6,5,5,5,4,4,3,3,3,3,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,3,3,3,3,4,4,5,5,5,6,6,7,7,8,8,9,9,9,10,11,11,12,12,13,13,14,14,15,16,16,17,17,18,19,19,20,21,21,22,22,23,24,24}
-unsigned long count=0;
+PROGMEM  prog_uchar sine256[] = {0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,5,5,6,6,7,7,8,8,8,9,9,10,10,11,11,12,12,13,14,14,15,15,16,16,17,18,18,19,19,20,21,21,22,23,23,24,24,25,26,26,27,28,28,29,29,30,31,31,32,32,33,34,34,35,35,36,37,37,38,38,39,39,40,40,41,41,42,42,43,43,44,44,45,45,45,46,46,46,47,47,48,48,48,48,49,49,49,49,50,50,50,50,50,50,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,50,50,50,50,50,50,49,49,49,49,48,48,48,48,47,47,46,46,46,45,45,45,44,44,43,43,42,42,41,41,40,40,39,39,38,38,37,37,36,35,35,34,34,33,32,32,31,31,30,29,29,28,28,27,26,26,25,24,24,23,23,22,21,21,20,19,19,18,18,17,16,16,15,15,14,14,13,12,12,11,11,10,10,9,9,8,8,8,7,7,6,6,5,5,5,4,4,4,3,3,3,2,2,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0,0,0};
+unsigned char count=0;
 unsigned char chan1,chan2,chan3,chan4,chan5,flip=0;
 unsigned char _chan1=0,_chan2=0,_chan3=0,_chan4=0,_chan5=0;
 
-ISR(TIMER2_COMPA_vect)
+ISR(TIMER2_OVF_vect)
 {
-  //TCCR2B |= (0 << CS20);
-  count++;
-  if(count >= chan1) _chan1 <= 100 ? _chan1++ : _chan1=0;
-  if(count >= chan2) _chan2 <= 100 ? _chan2++ : _chan2=0;
-  if(count >= chan3) _chan3 <= 100 ? _chan3++ : _chan3=0;
-  if(count >= chan4) _chan4 <= 100 ? _chan4++ : _chan4=0;
-  if(count >= chan5) _chan5 <= 100 ? _chan5++ : _chan5=0;
   
-  if(count >= 65535) count=0;
-//PORTD=  pgm_read_word_near(sine256 + count);
-  PORTD=  pgm_read_word_near(sine256 + _chan1);//+
-          pgm_read_word_near(sine256 + _chan2)+
-          pgm_read_word_near(sine256 + _chan3)+
-          pgm_read_word_near(sine256 + _chan4)+
-          pgm_read_word_near(sine256 + _chan5);
-//if(PORTD==0)
-//PORTD=0xFF;
-//else PORTD=0;
-// TCCR2B |= (1 << CS20);
+  
+//  if(count >= chan1) _chan1 <= 100 ? _chan1++ : _chan1=0;
+//  if(count >= chan2) _chan2 <= 100 ? _chan2++ : _chan2=0;
+//  if(count >= chan3) _chan3 <= 100 ? _chan3++ : _chan3=0;
+//  if(count >= chan4) _chan4 <= 100 ? _chan4++ : _chan4=0;
+//  if(count >= chan5) _chan5 <= 100 ? _chan5++ : _chan5=0;
+
+//  if(count < chan1) _chan1++;
+//  if(count < chan2) _chan2++;
+//  if(count < chan3) _chan3++;
+//  if(count < chan4) _chan4++;
+//  if(count < chan5) _chan5++;
+//  
+
+//   _chan1++;
+//   _chan2++;
+//   _chan3++;
+//   _chan4++;
+//   _chan5++;
+
+//PORTD=  pgm_read_byte_near(sine256 + count);
+//  PORTD=  pgm_read_byte_near(sine256 + _chan1)+
+//          pgm_read_byte_near(sine256 + _chan2)+
+//          pgm_read_byte_near(sine256 + _chan3)+
+//          pgm_read_byte_near(sine256 + _chan4)+
+//          pgm_read_byte_near(sine256 + _chan5);
+
+//count++;
+digitalRead(13)==1? digitalWrite(13,0) : digitalWrite(13,1);
 }
 
 void setup() 
 {
+  pinMode(13,OUTPUT);
   pinMode(7,OUTPUT);
   pinMode(6,OUTPUT);
   pinMode(5,OUTPUT);
@@ -66,92 +79,22 @@ void setup()
   pinMode(2,OUTPUT);
   pinMode(1,OUTPUT);
   pinMode(0,OUTPUT);
-  chan1=10;
-  chan2= 100;
-  chan3=1000;
-  chan4=1;
-  chan5=10;
   
-  Timer2Init(16);
+  digitalWrite(13,0);
+  chan1= 100;
+  chan2= 100;
+  chan3= 1000;
+  chan4= 100;
+  chan5= 100;
+  
+  Timer2.Initialize(2,8,249,0);
+  Timer2.enableInterrupt();
 
 }
 
 void loop() 
 {
-
+count=digitalRead(13);
 
 }
-
-void Timer2Init(unsigned char Mode, unsigned int Prescaller, unsigned int UP = 0xFF, unsigned char I_O_config = 0)
-{
-  cli();
-  TCCR2B =0;
-  TCCR2A =0;
-  OCR2A=UP;
-  
-
-  
-  
-  
-  
-  sei();
-}
-
-void Timer2ModeSetup(unsigned char Mode)                      //uso solo i 3 bit per il settaggio
-{
-  if(mode <= 7)
-  {
-    TCCR2A |= ((Mode & 2) << WGM21)|((Mode & 1) << WGM20);
-    TCCR2B |= ((Mode & 4) << WGM22); 
-  }
-  
- void Timer2IOConfig(unsigned char I_O_config)
- {
-   TCCR2A |= ((I_O_config & 8) << COM2A1)|((I_O_config & 4) << COM2A0)|((I_O_config & 2) << COM2B1)|((I_O_config & 1) << COM2B0);
- }
- 
- void Timer2PrescallerSetup(unsigned int Prescaller)
- {
-   switch(Prescaller)
-   {
-     case 0:
-       TCCR2B |= (0 << CS22)|(0 << CS21)|(0 << CS20);
-     break;
-       
-     case 1:
-       TCCR2B |= (0 << CS22)|(0 << CS21)|(1 << CS20);
-     break;
-       
-     case 8:
-       TCCR2B |= (0 << CS22)|(1 << CS21)|(0 << CS20);
-     break;
-     
-     case 32
-       TCCR2B |= (0 << CS22)|(1 << CS21)|(1 << CS20);
-     break;
-     
-     case 64:
-       TCCR2B |= (1 << CS22)|(0 << CS21)|(0 << CS20);
-     break;
-     
-     case 128:
-       TCCR2B |= (1 << CS22)|(0 << CS21)|(1 << CS20);
-     break;
-     
-     case 256:
-       TCCR2B |= (1 << CS22)|(1 << CS21)|(0 << CS20);
-     break;
-     
-     case 1024:
-       TCCR2B |= (1 << CS22)|(1 << CS21)|(1 << CS20);
-     break;
-     
-     default:
-       TCCR2B |= (0 << CS22)|(0 << CS21)|(1 << CS20);        //prescaller ad 1
-   }
- }
- 
- void
-}
-
 
