@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For TimerDue
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+TimerDue                       KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Initialize                     KEYWORD2
+ModeSetup                      KEYWORD2
+ModeSetup                      KEYWORD2
+PrescallerSetup                KEYWORD2
+enableInterrupt                KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
